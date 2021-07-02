@@ -23,7 +23,7 @@ git clone https://github.com/maglili/zwpy2bt.git
 **install requirements:**
 
 ```bash
-pip install -r requirements.txt
+pip install backtrader[plotting]
 ```
 
 ## Run
@@ -34,7 +34,7 @@ python main.py
 
 ## Strategy
 
-The **Strategy** package consisting 3 modules.
+The **Strategy** package consists of 3 modules.
 
 - BaseStrategyFrame
 - utils

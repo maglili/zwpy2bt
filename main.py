@@ -15,7 +15,8 @@ if __name__ == "__main__":
     # Add a strategy
     # cerebro.addstrategy(SmaStrategy, maperiod=20, printlog=True)
     # cerebro.addstrategy(CmaStrategy, maperiod=20, printlog=True)
-    cerebro.addstrategy(VwapStrategy, maperiod=20, printlog=True)
+    #cerebro.addstrategy(VwapStrategy, maperiod=20, kvwap=0.01, printlog=True)
+    cerebro.addstrategy(BBandsStrategy, BBandsperiod=20, printlog=True)
 
     # path to data
     datapath = "./sample_data/orcl-1995-2014.txt"

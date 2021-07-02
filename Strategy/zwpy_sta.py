@@ -191,3 +191,56 @@ class VwapStrategy(BaseStrategyFrame):
 
                     # Keep track of the created order to avoid a 2nd order
                     self.order = self.sell()
+
+
+class BBandsStrategy(BaseStrategyFrame):
+    """
+    Implementing BBands strategy in zwPython.
+
+    Rule:
+
+    Args:
+        BBandsperiod (int): ma period
+
+    """
+
+    params = (('BBandsperiod', 20),)
+
+    def __init__(self):
+
+        # multiple inheritance
+        super(BBandsStrategy, self).__init__()
+
+        print("printlog:", self.params.printlog)
+        print("BBandsperiod:", self.params.BBandsperiod)
+
+        # Add a MovingAverageSimple indicator
+        self.bband = bt.indicators.BBands(
+            self.datas[0], period=self.params.BBandsperiod)
+
+    def next(self):
+        # Simply log the closing price of the series from the reference
+        self.log("Close, %.2f" % self.dataclose[0])
+
+        # Check if an order is pending ... if yes, we cannot send a 2nd one
+        if self.order:
+            return
+
+        # Check if we are in the market
+        if not self.position:
+            if self.dataclose[0] < self.bband.lines.bot[0]:
+
+                # BUY, BUY, BUY!!! (with all possible default parameters)
+                self.log("BUY CREATE, %.2f" % self.dataclose[0])
+
+                # Keep track of the created order to avoid a 2nd order
+                self.order = self.buy()
+
+        else:
+            if self.dataclose[0] > self.bband.lines.top[0]:
+
+                # SELL, SELL, SELL!!! (with all possible default parameters)
+                self.log("SELL CREATE, %.2f" % self.dataclose[0])
+
+                # Keep track of the created order to avoid a 2nd order
+                self.order = self.sell()
