@@ -22,6 +22,9 @@ class BaseStrategyFrame(bt.Strategy):
 
     def __init__(self):
         # Keep a reference to the "close" line in the data[0] dataseries
+        self.dataopen = self.datas[0].open
+        self.datahigh = self.datas[0].high
+        self.datalow = self.datas[0].low
         self.dataclose = self.datas[0].close
 
         # To keep track of pending orders and buy price/commission
@@ -39,16 +42,26 @@ class BaseStrategyFrame(bt.Strategy):
         if order.status in [order.Completed]:
             if order.isbuy():
                 self.log(
-                    "BUY EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f"
-                    % (order.executed.price, order.executed.value, order.executed.comm)
+                    "BUY EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f, Cash %.2f"
+                    % (
+                        order.executed.price,
+                        order.executed.value,
+                        order.executed.comm,
+                        self.broker.getcash(),
+                    )
                 )
 
                 self.buyprice = order.executed.price
                 self.buycomm = order.executed.comm
             else:  # Sell
                 self.log(
-                    "SELL EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f"
-                    % (order.executed.price, order.executed.value, order.executed.comm)
+                    "SELL EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f, Cash %.2f"
+                    % (
+                        order.executed.price,
+                        order.executed.value,
+                        order.executed.comm,
+                        self.broker.getcash(),
+                    )
                 )
 
             self.bar_executed = len(self)
