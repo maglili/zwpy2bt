@@ -5,6 +5,20 @@
 Porting strategies from zwpython to Backtrader.
 Original strategies are located in `zwStrategy.py` in zwpython.
 
+**Strategy list:**
+
+1. Tim0Strategy (tim0Trad)
+2. SmaStrategy (SMA_sta)
+3. CmaStrategy (CMA_sta)
+4. VwapStrategy (VWAP_sta)
+5. BBandsStrategy (BBANDS_sta)
+6. TurStrategy (tur10)
+7. MacdV1Strategy (macd10)
+8. MacdV2Strategy (macd20)
+9. KdjV1Strategy (kdj10)
+10. KdjV2Strategy (kdj10)
+11. RsiStrategy (rsi10)
+
 ## Prerequisites
 
 - Python 2.7
@@ -32,7 +46,7 @@ pip install backtrader[plotting]
 python main.py
 ```
 
-## Strategy
+## Strategy Package
 
 The **Strategy** package consists of 3 modules.
 
