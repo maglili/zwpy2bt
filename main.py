@@ -7,17 +7,27 @@ import backtrader as bt
 from Strategy.zwpy_sta import *
 import matplotlib.pyplot as plt
 
+plt.rcParams["figure.figsize"] = (12, 18)
+
 
 if __name__ == "__main__":
     # Create a cerebro entity
     cerebro = bt.Cerebro()
 
     # Add a strategy
+    # cerebro.addstrategy(Tim0Strategy, printlog=True)
     # cerebro.addstrategy(SmaStrategy, maperiod=20, printlog=True)
     # cerebro.addstrategy(CmaStrategy, maperiod=20, printlog=True)
     # cerebro.addstrategy(VwapStrategy, maperiod=20, kvwap=0.01, printlog=True)
     # cerebro.addstrategy(BBandsStrategy, BBandsperiod=20, printlog=True)
-    cerebro.addstrategy(TurStrategy, n_high=5, n_low=5, printlog=True)
+    # cerebro.addstrategy(TurStrategy, n_high=5, n_low=5, printlog=True)
+    # cerebro.addstrategy(MacdV1Strategy, fast_period=12,
+    #                     slow_period=26, signal_period=9, printlog=True)
+    # cerebro.addstrategy(MacdV2Strategy, fast_period=12,
+    #                     slow_period=26, signal_period=9, printlog=True)
+    # cerebro.addstrategy(KdjV1Strategy, period_dfast=9, printlog=True)
+    # cerebro.addstrategy(KdjV2Strategy, period_dfast=9, printlog=True)
+    cerebro.addstrategy(RsiStrategy, period=14, kbuy=70, ksell=30, printlog=True)
 
     # path to data
     # datapath = "./sample_data/orcl-1995-2014.txt"

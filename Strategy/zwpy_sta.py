@@ -1,11 +1,53 @@
+"""
+This file contains carious strategies from zwpython.
+All strategies are class objects that inherits BaseStrategyFrame class,
+so user only need to writing 1) __init__ method and 2) next method.
+"""
+
 import backtrader as bt
 from Strategy.BaseStrategyFrame import BaseStrategyFrame
 from Strategy.utils import VolumeWeightedAveragePrice
 
 
+class Tim0Strategy(BaseStrategyFrame):
+    """
+    Implementing the tim0Trad strategy from zwPython.
+
+    Rule:
+        buy stock at first day then do nothing.
+
+    Args:
+        None.
+    """
+
+    def __init__(self):
+
+        # multiple inheritance
+        super(Tim0Strategy, self).__init__()
+
+        print("printlog:", self.params.printlog)
+
+    def next(self):
+        # Simply log the closing price of the series from the reference
+        self.log("Close, %.2f" % self.dataclose[0])
+
+        # Check if an order is pending ... if yes, we cannot send a 2nd one
+        if self.order:
+            return
+
+        # Check if we are in the market
+        if not self.position:
+
+            # BUY, BUY, BUY!!! (with all possible default parameters)
+            self.log("BUY CREATE, %.2f" % self.dataclose[0])
+
+            # Keep track of the created order to avoid a 2nd order
+            self.order = self.buy()
+
+
 class SmaStrategy(BaseStrategyFrame):
     """
-    Implementing SMA strategy from zwPython.
+    Implementing the SMA_sta strategy from zwPython.
 
     Rule:
         If close price > SMA: buy
@@ -25,7 +67,7 @@ class SmaStrategy(BaseStrategyFrame):
         print("printlog:", self.params.printlog)
         print("maperiod:", self.params.maperiod)
 
-        # Add a MovingAverageSimple indicator
+        # Add indicators
         self.sma = bt.indicators.SimpleMovingAverage(
             self.dataclose, period=self.params.maperiod
         )
@@ -62,7 +104,7 @@ class SmaStrategy(BaseStrategyFrame):
 
 class CmaStrategy(BaseStrategyFrame):
     """
-    Implementing CMA strategy from zwPython.
+    Implementing the CMA_sta strategy from zwPython.
 
     Rule:
         While close and MA crossover:
@@ -83,7 +125,7 @@ class CmaStrategy(BaseStrategyFrame):
         print("printlog:", self.params.printlog)
         print("maperiod:", self.params.maperiod)
 
-        # Add a MovingAverageSimple indicator
+        # Add indicators
         self.sma = bt.indicators.SimpleMovingAverage(
             self.dataclose, period=self.params.maperiod
         )
@@ -129,7 +171,7 @@ class CmaStrategy(BaseStrategyFrame):
 
 class VwapStrategy(BaseStrategyFrame):
     """
-    Implementing VWAP strategy from zwPython.
+    Implementing the VWAP_sta strategy from zwPython.
 
     Rule:
         No description in the book.
@@ -150,7 +192,7 @@ class VwapStrategy(BaseStrategyFrame):
         print("maperiod:", self.params.maperiod)
         print("kvwap:", self.params.kvwap)
 
-        # Add a MovingAverageSimple indicator
+        # Add indicators
         self.vwap = VolumeWeightedAveragePrice(
             self.dataclose, period=self.params.maperiod
         )
@@ -195,7 +237,7 @@ class VwapStrategy(BaseStrategyFrame):
 
 class BBandsStrategy(BaseStrategyFrame):
     """
-    Implementing BBands strategy from zwPython.
+    Implementing the BBANDS_sta strategy from zwPython.
 
     Rule:
         If close price < bottom bband: sell.
@@ -216,7 +258,7 @@ class BBandsStrategy(BaseStrategyFrame):
         print("printlog:", self.params.printlog)
         print("BBandsperiod:", self.params.BBandsperiod)
 
-        # Add a MovingAverageSimple indicator
+        # Add indicators
         self.bband = bt.indicators.BBands(
             self.dataclose, period=self.params.BBandsperiod
         )
@@ -251,7 +293,7 @@ class BBandsStrategy(BaseStrategyFrame):
 
 class TurStrategy(BaseStrategyFrame):
     """
-    Implementing turtle strategy from zwPython.
+    Implementing the tur10 strategy from zwPython.
 
     Rule:
         If close price > max( high price of pass n days): buy.
@@ -274,7 +316,7 @@ class TurStrategy(BaseStrategyFrame):
         print("n_high:", self.params.n_high)
         print("n_low:", self.params.n_low)
 
-        # Add a MovingAverageSimple indicator
+        # Add indicators
         self.pass_highest = bt.indicators.Highest(
             self.datahigh, period=self.params.n_high
         )
@@ -288,11 +330,6 @@ class TurStrategy(BaseStrategyFrame):
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
             return
-
-        if self.dataclose[0] > self.pass_highest[0]:
-            print("hi")
-        if self.dataclose[0] < self.pass_lowest[0]:
-            print("**")
 
         # Check if we are in the market
         if not self.position:
@@ -309,6 +346,333 @@ class TurStrategy(BaseStrategyFrame):
         else:
 
             if self.dataclose[0] < self.pass_lowest[-1]:
+                # SELL, SELL, SELL!!! (with all possible default parameters)
+                self.log("SELL CREATE, %.2f" % self.dataclose[0])
+
+                # Keep track of the created order to avoid a 2nd order
+                self.order = self.sell()
+
+
+class MacdV1Strategy(BaseStrategyFrame):
+    """
+    Implementing the macd10 strategy from zwPython.
+
+    Rule:
+        If MACD > 0: buy.
+        If MACD < 0: sell.
+
+    Args:.
+        fast_period (int): fast ema period.
+        slow_period (int): slow ema period.
+        signal_period (int): macd signal period.
+
+    """
+
+    params = (("fast_period", 12), ("slow_period", 26), ("signal_period", 9))
+
+    def __init__(self):
+
+        # multiple inheritance
+        super(MacdV1Strategy, self).__init__()
+
+        print("printlog:", self.params.printlog)
+        print("period_me1:", self.params.fast_period)
+        print("period_me2:", self.params.slow_period)
+        print("period_signal:", self.params.signal_period)
+
+        # Add indicators
+        self.macd = bt.indicators.MACD(
+            self.dataclose,
+            period_me1=self.params.fast_period,
+            period_me2=self.params.slow_period,
+            period_signal=self.params.signal_period,
+        )
+
+    def next(self):
+        # Simply log the closing price of the series from the reference
+        self.log("Close, %.2f" % self.dataclose[0])
+
+        # Check if an order is pending ... if yes, we cannot send a 2nd one
+        if self.order:
+            return
+
+        # Check if we are in the market
+        if not self.position:
+
+            # Not yet ... we MIGHT BUY if ...
+            if self.macd.macd[0] > 0:
+
+                # BUY, BUY, BUY!!! (with all possible default parameters)
+                self.log("BUY CREATE, %.2f" % self.dataclose[0])
+
+                # Keep track of the created order to avoid a 2nd order
+                self.order = self.buy()
+
+        else:
+
+            # self.mcross[0] == -1:
+            if self.macd.macd[0] < 0:
+
+                # SELL, SELL, SELL!!! (with all possible default parameters)
+                self.log("SELL CREATE, %.2f" % self.dataclose[0])
+
+                # Keep track of the created order to avoid a 2nd order
+                self.order = self.sell()
+
+
+class MacdV2Strategy(BaseStrategyFrame):
+    """
+    Implementing the macd20 strategy from zwPython.
+
+    Rule:
+        If MACD - MACD_signal > 0: buy.
+        If MACD - MACD_signal < 0: sell.
+
+    Args:
+        fast_period (int): fast ema period.
+        slow_period (int): slow ema period.
+        signal_period (int): macd signal period.
+    """
+
+    params = (("fast_period", 12), ("slow_period", 26), ("signal_period", 9))
+
+    def __init__(self):
+
+        # multiple inheritance
+        super(MacdV2Strategy, self).__init__()
+
+        print("printlog:", self.params.printlog)
+        print("period_me1:", self.params.fast_period)
+        print("period_me2:", self.params.slow_period)
+        print("period_signal:", self.params.signal_period)
+
+        # Add indicators
+        self.macd = bt.indicators.MACD(
+            self.dataclose,
+            period_me1=self.params.fast_period,
+            period_me2=self.params.slow_period,
+            period_signal=self.params.signal_period,
+        )
+
+    def next(self):
+        # Simply log the closing price of the series from the reference
+        self.log("Close, %.2f" % self.dataclose[0])
+
+        # Check if an order is pending ... if yes, we cannot send a 2nd one
+        if self.order:
+            return
+
+        # Check if we are in the market
+        if not self.position:
+
+            # Not yet ... we MIGHT BUY if ...
+            if self.macd.macd[0] > self.macd.signal[0]:  # self.mcross[0] == 1:
+
+                # BUY, BUY, BUY!!! (with all possible default parameters)
+                self.log("BUY CREATE, %.2f" % self.dataclose[0])
+
+                # Keep track of the created order to avoid a 2nd order
+                self.order = self.buy()
+
+        else:
+
+            # self.mcross[0] == -1:
+            if self.macd.macd[0] < self.macd.signal[0]:
+
+                # SELL, SELL, SELL!!! (with all possible default parameters)
+                self.log("SELL CREATE, %.2f" % self.dataclose[0])
+
+                # Keep track of the created order to avoid a 2nd order
+                self.order = self.sell()
+
+
+class KdjV1Strategy(BaseStrategyFrame):
+    """
+    Implementing the kdj10 strategy from zwPython.
+
+    Rule:
+        If K value > 90: buy.
+        If K value < 10: sell.
+
+    Args:
+        period_dfast (int): EMA period in D value.
+
+    """
+
+    params = (("period_dfast", 3),)
+
+    def __init__(self):
+
+        # multiple inheritance
+        super(KdjV1Strategy, self).__init__()
+
+        print("printlog:", self.params.printlog)
+        print("period_dfast:", self.params.period_dfast)
+
+        # Add indicators
+        self.kd = bt.indicators.StochasticFast(
+            self.datas[0],
+            period=1,
+            period_dfast=self.params.period_dfast,
+            movav=bt.indicators.EMA,
+            safediv=True,
+        )
+
+    def next(self):
+        # Simply log the closing price of the series from the reference
+        self.log("Close, %.2f" % self.dataclose[0])
+
+        # Check if an order is pending ... if yes, we cannot send a 2nd one
+        if self.order:
+            return
+
+        # Check if we are in the market
+        if not self.position:
+
+            # Not yet ... we MIGHT BUY if ...
+            if self.kd.percK[0] > 90:
+
+                # BUY, BUY, BUY!!! (with all possible default parameters)
+                self.log("BUY CREATE, %.2f" % self.dataclose[0])
+
+                # Keep track of the created order to avoid a 2nd order
+                self.order = self.buy()
+
+        else:
+
+            if self.kd.percK[0] < 10:
+
+                # SELL, SELL, SELL!!! (with all possible default parameters)
+                self.log("SELL CREATE, %.2f" % self.dataclose[0])
+
+                # Keep track of the created order to avoid a 2nd order
+                self.order = self.sell()
+
+
+class KdjV2Strategy(BaseStrategyFrame):
+    """
+    Implementing the kdj10 strategy from zwPython.
+
+    Rule:
+        If K value > d value, and k value is upward: buy.
+        If K value < d value, and k value is downward: sell.
+
+    Args:
+        period_dfast (int): EMA period in D value.
+
+    """
+
+    params = (("period_dfast", 3),)
+
+    def __init__(self):
+
+        # multiple inheritance
+        super(KdjV2Strategy, self).__init__()
+
+        print("printlog:", self.params.printlog)
+        print("period_dfast:", self.params.period_dfast)
+
+        # Add indicators
+        self.kd = bt.indicators.StochasticFast(
+            self.datas[0],
+            period=1,
+            period_dfast=self.params.period_dfast,
+            movav=bt.indicators.EMA,
+            safediv=True,
+        )
+
+        self.crossover = bt.indicators.CrossOver(self.kd.percK, self.kd.percD)
+
+    def next(self):
+        # Simply log the closing price of the series from the reference
+        self.log("Close, %.2f" % self.dataclose[0])
+
+        # Check if an order is pending ... if yes, we cannot send a 2nd one
+        if self.order:
+            return
+
+        # Check if we are in the market
+        if not self.position:
+
+            # Not yet ... we MIGHT BUY if ...
+            if self.crossover[0] == 1:
+
+                # BUY, BUY, BUY!!! (with all possible default parameters)
+                self.log("BUY CREATE, %.2f" % self.dataclose[0])
+
+                # Keep track of the created order to avoid a 2nd order
+                self.order = self.buy()
+
+        else:
+
+            if self.crossover[0] == -1:
+
+                # SELL, SELL, SELL!!! (with all possible default parameters)
+                self.log("SELL CREATE, %.2f" % self.dataclose[0])
+
+                # Keep track of the created order to avoid a 2nd order
+                self.order = self.sell()
+
+
+class RsiStrategy(BaseStrategyFrame):
+    """
+    Implementing the rsi10 strategy from zwPython.
+
+    Rule:
+        If rsi > kbuy: buy.
+        If rsi < ksell: sell.
+
+    Args:
+        period (int): period for calucate rsi.
+        kbuy (int): buy threshold for rsi value.
+        ksell (int): sell threshold for rsi value.
+
+    """
+
+    params = (("period", 14), ("kbuy", 80), ("ksell", 20))
+
+    def __init__(self):
+
+        # multiple inheritance
+        super(RsiStrategy, self).__init__()
+
+        print("printlog:", self.params.printlog)
+        print("period:", self.params.period)
+        print("kbuy:", self.params.kbuy)
+        print("ksell:", self.params.ksell)
+
+        # Add indicators
+        self.rsi = bt.indicators.RelativeStrengthIndex(
+            self.dataclose,
+            period=self.params.period,
+            movav=bt.indicators.EMA,
+            safediv=False,
+        )
+
+    def next(self):
+        # Simply log the closing price of the series from the reference
+        self.log("Close, %.2f" % self.dataclose[0])
+
+        # Check if an order is pending ... if yes, we cannot send a 2nd one
+        if self.order:
+            return
+
+        # Check if we are in the market
+        if not self.position:
+
+            # Not yet ... we MIGHT BUY if ...
+            if self.rsi[0] > self.params.kbuy:
+
+                # BUY, BUY, BUY!!! (with all possible default parameters)
+                self.log("BUY CREATE, %.2f" % self.dataclose[0])
+
+                # Keep track of the created order to avoid a 2nd order
+                self.order = self.buy()
+
+        else:
+
+            if self.rsi[0] < self.params.ksell:
+
                 # SELL, SELL, SELL!!! (with all possible default parameters)
                 self.log("SELL CREATE, %.2f" % self.dataclose[0])
 
