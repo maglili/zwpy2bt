@@ -305,8 +305,6 @@ class BBandsStrategy(BaseStrategyFrame):
 
                 # Keep track of the created order to avoid a 2nd order
                 self.order = self.buy()
-                # print(self.dataclose[0])
-                # print(self.bband.lines.bot[0])
 
         else:
             if self.dataclose[0] > self.bband.lines.top[0]:

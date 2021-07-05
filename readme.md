@@ -83,6 +83,17 @@ are now only need fewer code.
 
 ## Result Comparison
 
+A Comparison experiment is conducted and the result (stocks value + balances) as shown on following table.
+
+**Experiment setting:**
+
+```text
+Inital cash: 10000
+Data: 600401_yahoo.csv
+Backtest period: 2015, 1, 1 ~
+Sizer: PercentSizerInt, percents=90
+```
+
 **Original result:**
 
 |    Strategy    |   zwpython   |  backtrader  |
