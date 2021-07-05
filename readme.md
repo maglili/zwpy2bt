@@ -125,11 +125,9 @@ To correct the VWAP formula in zwpython.
 | :----------: | :------: | :--------: |
 | VwapStrategy | 17102.59 |  17102.59  |
 
->
-There are some bugs in zwpython, and I already fixed some of them,
-so you might not have a same result as the table above.
-
-
+>There are some bugs in zwpython
+>and I already fixed some of them,
+>so you might not have a same result as the table above.
 
 ### Why still a difference b/t bt and zwpy?
 
