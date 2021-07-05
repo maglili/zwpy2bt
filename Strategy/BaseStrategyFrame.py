@@ -42,9 +42,10 @@ class BaseStrategyFrame(bt.Strategy):
         if order.status in [order.Completed]:
             if order.isbuy():
                 self.log(
-                    "BUY EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f, Cash %.2f"
+                    "BUY EXECUTED, Price: %.2f, Size: %.2f, Cost: %.2f, Comm %.2f, Cash %.2f"
                     % (
                         order.executed.price,
+                        order.executed.size,
                         order.executed.value,
                         order.executed.comm,
                         self.broker.getcash(),
@@ -55,9 +56,10 @@ class BaseStrategyFrame(bt.Strategy):
                 self.buycomm = order.executed.comm
             else:  # Sell
                 self.log(
-                    "SELL EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f, Cash %.2f"
+                    "SELL EXECUTED, Price: %.2f, Size: %.2f, Cost: %.2f, Comm %.2f, Cash %.2f"
                     % (
                         order.executed.price,
+                        order.executed.size,
                         order.executed.value,
                         order.executed.comm,
                         self.broker.getcash(),

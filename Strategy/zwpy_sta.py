@@ -29,7 +29,12 @@ class Tim0Strategy(BaseStrategyFrame):
 
     def next(self):
         # Simply log the closing price of the series from the reference
-        self.log("Close, %.2f" % self.dataclose[0])
+        # self.log("Close, %.2f" % self.dataclose[0])
+        self.log(
+            "O:{:.2f}, H:{:.2f}, L:{:.2f}, C:{:.2f}".format(
+                self.dataopen[0], self.datahigh[0], self.datalow[0], self.dataclose[0]
+            )
+        )
 
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
@@ -74,7 +79,12 @@ class SmaStrategy(BaseStrategyFrame):
 
     def next(self):
         # Simply log the closing price of the series from the reference
-        self.log("Close, %.2f" % self.dataclose[0])
+        # self.log("Close, %.2f" % self.dataclose[0])
+        self.log(
+            "O:{:.2f}, H:{:.2f}, L:{:.2f}, C:{:.2f}".format(
+                self.dataopen[0], self.datahigh[0], self.datalow[0], self.dataclose[0]
+            )
+        )
 
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
@@ -132,7 +142,12 @@ class CmaStrategy(BaseStrategyFrame):
 
     def next(self):
         # Simply log the closing price of the series from the reference
-        self.log("Close, %.2f" % self.dataclose[0])
+        # self.log("Close, %.2f" % self.dataclose[0])
+        self.log(
+            "O:{:.2f}, H:{:.2f}, L:{:.2f}, C:{:.2f}".format(
+                self.dataopen[0], self.datahigh[0], self.datalow[0], self.dataclose[0]
+            )
+        )
 
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
@@ -194,12 +209,17 @@ class VwapStrategy(BaseStrategyFrame):
 
         # Add indicators
         self.vwap = VolumeWeightedAveragePrice(
-            self.dataclose, period=self.params.maperiod
+            self.datas[0], period=self.params.maperiod
         )
 
     def next(self):
         # Simply log the closing price of the series from the reference
-        self.log("Close, %.2f" % self.dataclose[0])
+        # self.log("Close, %.2f" % self.dataclose[0])
+        self.log(
+            "O:{:.2f}, H:{:.2f}, L:{:.2f}, C:{:.2f}".format(
+                self.dataopen[0], self.datahigh[0], self.datalow[0], self.dataclose[0]
+            )
+        )
 
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
@@ -265,7 +285,12 @@ class BBandsStrategy(BaseStrategyFrame):
 
     def next(self):
         # Simply log the closing price of the series from the reference
-        self.log("Close, %.2f" % self.dataclose[0])
+        # self.log("Close, %.2f" % self.dataclose[0])
+        self.log(
+            "O:{:.2f}, H:{:.2f}, L:{:.2f}, C:{:.2f}".format(
+                self.dataopen[0], self.datahigh[0], self.datalow[0], self.dataclose[0]
+            )
+        )
 
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
@@ -280,6 +305,8 @@ class BBandsStrategy(BaseStrategyFrame):
 
                 # Keep track of the created order to avoid a 2nd order
                 self.order = self.buy()
+                # print(self.dataclose[0])
+                # print(self.bband.lines.bot[0])
 
         else:
             if self.dataclose[0] > self.bband.lines.top[0]:
@@ -325,7 +352,12 @@ class TurStrategy(BaseStrategyFrame):
 
     def next(self):
         # Simply log the closing price of the series from the reference
-        self.log("Close, %.2f" % self.dataclose[0])
+        # self.log("Close, %.2f" % self.dataclose[0])
+        self.log(
+            "O:{:.2f}, H:{:.2f}, L:{:.2f}, C:{:.2f}".format(
+                self.dataopen[0], self.datahigh[0], self.datalow[0], self.dataclose[0]
+            )
+        )
 
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
@@ -390,7 +422,12 @@ class MacdV1Strategy(BaseStrategyFrame):
 
     def next(self):
         # Simply log the closing price of the series from the reference
-        self.log("Close, %.2f" % self.dataclose[0])
+        # self.log("Close, %.2f" % self.dataclose[0])
+        self.log(
+            "O:{:.2f}, H:{:.2f}, L:{:.2f}, C:{:.2f}".format(
+                self.dataopen[0], self.datahigh[0], self.datalow[0], self.dataclose[0]
+            )
+        )
 
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
@@ -456,7 +493,12 @@ class MacdV2Strategy(BaseStrategyFrame):
 
     def next(self):
         # Simply log the closing price of the series from the reference
-        self.log("Close, %.2f" % self.dataclose[0])
+        # self.log("Close, %.2f" % self.dataclose[0])
+        self.log(
+            "O:{:.2f}, H:{:.2f}, L:{:.2f}, C:{:.2f}".format(
+                self.dataopen[0], self.datahigh[0], self.datalow[0], self.dataclose[0]
+            )
+        )
 
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
@@ -466,7 +508,7 @@ class MacdV2Strategy(BaseStrategyFrame):
         if not self.position:
 
             # Not yet ... we MIGHT BUY if ...
-            if self.macd.macd[0] > self.macd.signal[0]:  # self.mcross[0] == 1:
+            if self.macd.macd[0] > self.macd.signal[0]:
 
                 # BUY, BUY, BUY!!! (with all possible default parameters)
                 self.log("BUY CREATE, %.2f" % self.dataclose[0])
@@ -476,7 +518,6 @@ class MacdV2Strategy(BaseStrategyFrame):
 
         else:
 
-            # self.mcross[0] == -1:
             if self.macd.macd[0] < self.macd.signal[0]:
 
                 # SELL, SELL, SELL!!! (with all possible default parameters)
@@ -520,7 +561,12 @@ class KdjV1Strategy(BaseStrategyFrame):
 
     def next(self):
         # Simply log the closing price of the series from the reference
-        self.log("Close, %.2f" % self.dataclose[0])
+        # self.log("Close, %.2f" % self.dataclose[0])
+        self.log(
+            "O:{:.2f}, H:{:.2f}, L:{:.2f}, C:{:.2f}".format(
+                self.dataopen[0], self.datahigh[0], self.datalow[0], self.dataclose[0]
+            )
+        )
 
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
@@ -537,6 +583,9 @@ class KdjV1Strategy(BaseStrategyFrame):
 
                 # Keep track of the created order to avoid a 2nd order
                 self.order = self.buy()
+
+                print(self.kd.percK[0])
+                print("=" * 25)
 
         else:
 
@@ -585,7 +634,12 @@ class KdjV2Strategy(BaseStrategyFrame):
 
     def next(self):
         # Simply log the closing price of the series from the reference
-        self.log("Close, %.2f" % self.dataclose[0])
+        # self.log("Close, %.2f" % self.dataclose[0])
+        self.log(
+            "O:{:.2f}, H:{:.2f}, L:{:.2f}, C:{:.2f}".format(
+                self.dataopen[0], self.datahigh[0], self.datalow[0], self.dataclose[0]
+            )
+        )
 
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
@@ -651,7 +705,12 @@ class RsiStrategy(BaseStrategyFrame):
 
     def next(self):
         # Simply log the closing price of the series from the reference
-        self.log("Close, %.2f" % self.dataclose[0])
+        # self.log("Close, %.2f" % self.dataclose[0])
+        self.log(
+            "O:{:.2f}, H:{:.2f}, L:{:.2f}, C:{:.2f}".format(
+                self.dataopen[0], self.datahigh[0], self.datalow[0], self.dataclose[0]
+            )
+        )
 
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
