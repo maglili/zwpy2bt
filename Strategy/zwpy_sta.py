@@ -1,5 +1,5 @@
 """
-This file contains carious strategies from zwpython.
+This file contains various strategies from zwpython.
 All strategies are class objects that inherits BaseStrategyFrame class,
 so user only need to writing 1) __init__ method and 2) next method.
 """

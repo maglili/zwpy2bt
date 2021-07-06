@@ -48,7 +48,7 @@ python main.py
 
 If you use 600401_yahoo.csv as sample data, then reverse parameter
 in datafeed should be "True",
-because 600401_yahoo.csv is decreaded order.
+because 600401_yahoo.csv is decreased order.
 
 ```python
     data = bt.feeds.YahooFinanceCSVData(
@@ -66,6 +66,24 @@ The **Strategy** package consists of 3 modules.
 - BaseStrategyFrame
 - utils
 - zwpy_sta
+
+```text
+./stock-zwpython/
+├── main.py
+├── readme.md
+├── result.png
+├── sample_data
+│   ├── 600401_yahoo.csv
+│   ├── orcl-1995-2014.txt
+│   └── readme.md
+└── Strategy
+    ├── BaseStrategyFrame.py
+    ├── __init__.py
+    ├── utils.py
+    └── zwpy_sta.py
+
+2 directories, 10 files
+```
 
 ### Module Description
 
@@ -88,7 +106,7 @@ A Comparison experiment is conducted and the result (stocks value + balances) as
 **Experiment setting:**
 
 ```text
-Inital cash: 10000
+Initial cash: 10000
 Data: 600401_yahoo.csv
 Backtest period: 2015, 1, 1 ~
 Sizer: PercentSizerInt, percents=90
@@ -110,7 +128,7 @@ Sizer: PercentSizerInt, percents=90
 | KdjV2Strategy  | **14807.79** | **16429.68** |
 |  RsiStrategy   | **7808.42**  | **8995.14**  |
 
-**Aefore handing decimal place problem:**
+**After handing decimal place problem:**
 
 Remove round process in backtest.
 
@@ -128,7 +146,7 @@ Remove round process in backtest.
 | KdjV2Strategy  | **14807.79** | **16429.68** |
 |  RsiStrategy   | **7808.42**  | **8995.14**  |
 
-**Aefore handing formula problem:**
+**After handing formula problem:**
 
 To correct the VWAP formula in zwpython.
 
@@ -144,17 +162,17 @@ To correct the VWAP formula in zwpython.
 
 The difference comes from decimal place problem
 in technical index calculation (e.g. VWAP, MACD, KDJ,...),
-say RSI = 9.99998 vs RSI = 10.00001, will have different decision in strategy.
-That merely a order difference b/t a day can cause a big differnt result,
+say RSI = 93.700 vs RSI = 96.849, will have different decision in strategy.
+That merely a order difference b/t a day can cause a big different result,
 the problem cannot solve by merely remove rounding  process
 that in backtest in zwpython.
 
 ### Which one is more accurate?
 
-The result of backtrader might more accurate since it still maintaning
-by github community (6.6 star).
-Technical index in Backtrader are calcuated by TA-lib pakage,
+The result of backtrader might more accurate since it still maintaining
+by github community (6.6k star).
+Technical index in Backtrader are calculated by bt.indicator or TA-lib package,
 which offer a reliable result,
-while in zwpython, Technical index are calcuated by functions
+while in zwpython, Technical index are calculated by functions
 that created by creator of zwpython, there might exist some bugs
 (and there are indeed some bugs in some scripts in zwpython).
